@@ -52,13 +52,13 @@
 	}
 
 	window.addEventListener('load', async () => {
-		const nav = $('nav'), article = $('article')
+		const nav = $('nav'), main = $('main')
 
 		const files = await loadFiles('feelfreetofee/test', 'main')
 
 		window.onpopstate = async e => {
 			const file = await loadFile(files, decodeURI(window.location.pathname))
-			article.innerHTML = file || '404'
+			main.innerHTML = file || '404'
 		}
 
 		createNav(files, nav)
@@ -72,29 +72,38 @@
 </script>
 <style>
 	body {
+		font-family: roboto, helvetica, arial, sans-serif;
+		background: #000;
+		max-width: 90rem;
+		margin: 0 auto;
 		display: flex;
 		height: 100%;
-		margin: 0;
 	}
-	article {
+	main {
 		padding: 1rem;
+		color: #fff;
 		flex: auto;
 	}
 	nav {
-		font-family: roboto, helvetica, arial, sans-serif;
+		overflow-y: auto;
 		padding: 1rem 0rem;
-		font-weight: bold;
-		background: black;
-		color: white;
+		color: #aaa;
 		width: 11rem;
 	}
 	nav div, nav summary {
 		padding: 0.1rem 1rem;
 	}
 	details div, details details {
-		margin-left: 0.9rem;
+		margin-left: 1.2rem;
+		border-left: 1px solid #aaa;
 	}
 	nav div:hover, nav summary:hover {
-		background: grey;
+		background: #222;
+		color: #fff;
+	}
+	@media (max-width: 767px) {
+		nav {
+			display: none;
+		}
 	}
 </style>
