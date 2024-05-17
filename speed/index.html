@@ -1,3 +1,16 @@
 <script>
-  navigator.geolocation.watchPosition(e => document.body.innerHTML = e?.coords?.speed)
+const rad = Math.PI / 180
+const xd = (lat1, lon1, lat2, lon2) => 12742 * Math.asin(Math.sqrt((
+	(1 - Math.cos((lat2 *= rad) - (lat1 *= rad))) +
+	(1 - Math.cos(lon2 * rad - lon1 * rad)) *
+	Math.cos(lat1) * Math.cos(lat2)
+) / 2))
+let latitude = 0, longitude = 0, timestamp = 0
+navigator.geolocation.watchPosition(e => {
+	const time = (e.timestamp - timestamp) / 1e3
+	console.log(e)
+	timestamp = e.timestamp
+	const distance = xd(latitude, longitude, latitude = e.coords.latitude, longitude = e.coords.longitude)
+	document.body.innerHTML = distance / time
+})
 </script>
