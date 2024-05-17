@@ -11,8 +11,8 @@ setInterval(() => navigator.geolocation.getCurrentPosition(e => {
 	const time = Math.abs(timestamp - (timestamp = e.timestamp)) / 1e3
 	const distance = xd(latitude, longitude, latitude = e.coords.latitude, longitude = e.coords.longitude)
 	console.log(time, distance)
-	document.body.innerHTML = distance / time
+	document.body.innerHTML = distance
 }, undefined, {
 	enableHighAccuracy: true
-}), 500)
+}), 1000)
 </script>
