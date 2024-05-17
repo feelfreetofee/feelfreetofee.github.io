@@ -1,3 +1,3 @@
 <script>
-  window.addEventListener('devicemotion', e =>  document.body.innerHTML = `${Math.ceil(e.acceleration.x * e.interval * 3.6)}`)
+  navigator.geolocation.watchPosition(e => document.body.innerHTML = e?.coords?.speed)
 </script>
