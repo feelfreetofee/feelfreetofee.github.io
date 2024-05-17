@@ -12,5 +12,8 @@ navigator.geolocation.watchPosition(e => {
 	const distance = xd(latitude, longitude, latitude = e.coords.latitude, longitude = e.coords.longitude)
 	console.log(time, distance)
 	document.body.innerHTML = distance / time
+}, console.log, {
+	enableHighAccuracy: true,
+	timeout: 500
 })
 </script>
