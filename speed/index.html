@@ -6,14 +6,13 @@ const xd = (lat1, lon1, lat2, lon2) => 12742e3 * Math.asin(Math.sqrt((
 	Math.cos(lat1) * Math.cos(lat2)
 ) / 2))
 let latitude = 0, longitude = 0, timestamp = 0
-navigator.geolocation.watchPosition(e => {
+setInterval(() => navigator.geolocation.getCurrentPosition(e => {
 	console.log(e)
 	const time = Math.abs(timestamp - (timestamp = e.timestamp)) / 1e3
 	const distance = xd(latitude, longitude, latitude = e.coords.latitude, longitude = e.coords.longitude)
 	console.log(time, distance)
 	document.body.innerHTML = distance / time
-}, console.log, {
-	enableHighAccuracy: true,
-	timeout: 500
-})
+}, undefined, {
+	enableHighAccuracy: true
+}), 500)
 </script>
