@@ -1,6 +1,6 @@
 <script>
 const rad = Math.PI / 180
-const xd = (lat1, lon1, lat2, lon2) => 12742 * Math.asin(Math.sqrt((
+const xd = (lat1, lon1, lat2, lon2) => 12742e3 * Math.asin(Math.sqrt((
 	(1 - Math.cos((lat2 *= rad) - (lat1 *= rad))) +
 	(1 - Math.cos(lon2 * rad - lon1 * rad)) *
 	Math.cos(lat1) * Math.cos(lat2)
