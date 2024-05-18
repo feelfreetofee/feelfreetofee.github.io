@@ -27,7 +27,7 @@
 	const commands = {
 		'que hora es': t => speechSynthesis.speak(new SpeechSynthesisUtterance(new Date().toLocaleString('en', {hour: 'numeric', minute: 'numeric', hour12: true})))
 	}
-	if ()
+
 	SpeechRecognition = window.speechRecognition || window.SpeechRecognition || window.webkitSpeechRecognition
 	document.body.appendChild(Object.assign(document.createElement('button'), {
 		innerHTML: 'Start',
