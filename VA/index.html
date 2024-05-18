@@ -1,8 +1,8 @@
 <body>
 <script>
 	const commands = {
-		'que hora es': t => speechSynthesis.speak(new SpeechSynthesisUtterance(new Date().toLocaleString('en', {hour: 'numeric', minute: 'numeric', hour12: true}))),
-		'que temperatura hace': t => navigator.geolocation.getCurrentPosition(e => fetch(`https://api.open-meteo.com/v1/meteofrance?latitude=${e.coords.latitude}&longitude=${e.coords.longitude}&current=temperature`).then(r => r.json()).then(r => speechSynthesis.speak(new SpeechSynthesisUtterance(`${Math.round(r.current.temperature)} ${r.current_units.temperature}`))))
+		'hora': t => speechSynthesis.speak(new SpeechSynthesisUtterance(new Date().toLocaleString('en', {hour: 'numeric', minute: 'numeric', hour12: true}))),
+		'temperatura': t => navigator.geolocation.getCurrentPosition(e => fetch(`https://api.open-meteo.com/v1/meteofrance?latitude=${e.coords.latitude}&longitude=${e.coords.longitude}&current=temperature`).then(r => r.json()).then(r => speechSynthesis.speak(new SpeechSynthesisUtterance(`${Math.round(r.current.temperature)} ${r.current_units.temperature}`))))
 	}
 
 	SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition
