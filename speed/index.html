@@ -27,13 +27,13 @@
 	const commands = {
 		'que hora es': t => speechSynthesis.speak(new SpeechSynthesisUtterance(new Date().toLocaleString('en', {hour: 'numeric', minute: 'numeric', hour12: true})))
 	}
-
+	SpeechRecognition = speechRecognition || SpeechRecognition || webkitSpeechRecognition
 	document.body.appendChild(Object.assign(document.createElement('button'), {
 		innerHTML: 'Start',
 		onclick() {
 			speechSynthesis.speak(new SpeechSynthesisUtterance('Iniciando sistemas'))
 
-			Object.assign(new (SpeechRecognition || webkitSpeechRecognition), {
+			Object.assign(new SpeechRecognition, {
 				continuous: true,
 				lang: 'es-ES',
 				onresult: e => commands[e.results[e.results.length - 1][0].transcript.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().trim()]?.() || (speed.innerHTML = (e.results[e.results.length - 1][0].transcript)),
