@@ -11,7 +11,7 @@
 		font-family: arial;
 	}
 </style>
-<div id=speed>16.56</div>
+<div id=speed>666.66</div>
 <script>
 	const rad = Math.PI / 180
 	const harvesine = (lat1, lon1, lat2, lon2) => 12742e3 * Math.asin(Math.sqrt(
@@ -27,6 +27,28 @@
 		speed.innerHTML = ((distance / time) * 3.6).toFixed(2)
 	}, undefined, {
 		enableHighAccuracy: true,
-		timeout: 500
+		timeout: 1000
 	})
+
+	const commands = {
+		'que hora es': t => speechSynthesis.speak(new SpeechSynthesisUtterance(new Date().toLocaleString('en', {hour: 'numeric', minute: 'numeric', hour12: true})))
+	}
+
+	document.body.appendChild(Object.assign(document.createElement('button'), {
+		innerHTML: 'Start',
+		onclick() {
+			speechSynthesis.speak(new SpeechSynthesisUtterance('Iniciando sistemas'))
+
+			Object.assign(new webkitSpeechRecognition, {
+				continuous: true,
+				lang: 'es-ES',
+				onresult: e => commands[e.results[e.results.length - 1][0].transcript.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().trim()]?.() || console.log(e.results[e.results.length - 1][0].transcript),
+				onend() {
+					this.start()
+				}
+			}).start()
+
+			this.remove()
+		}
+	}))
 </script>
