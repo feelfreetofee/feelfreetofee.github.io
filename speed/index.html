@@ -22,7 +22,7 @@
 	const speed = document.getElementById('speed')
 	navigator.geolocation.watchPosition(e => {
 		const time = Math.abs(timestamp - (timestamp = e.timestamp)) / 1e3
-		const distance = xd(latitude, longitude, latitude = e.coords.latitude, longitude = e.coords.longitude)
+		const distance = harvesine(latitude, longitude, latitude = e.coords.latitude, longitude = e.coords.longitude)
 		speed.innerHTML = ((distance / time) * 3.6).toFixed(2)
 	}, undefined, {
 		enableHighAccuracy: true,
