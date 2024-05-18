@@ -1,1 +1,59 @@
-window.speechRecognition
+<body>
+<style>
+	body {
+		margin: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		font-size: 25vw;
+		background: black;
+		color: white;
+		font-family: arial;
+	}
+</style>
+<script>
+	const rad = Math.PI / 180
+	const harvesine = (lat1, lon1, lat2, lon2) => 12742e3 * Math.asin(Math.sqrt(
+		Math.pow(Math.sin(((lat1 *= rad) - (lat2 *= rad)) / 2), 2) +
+		Math.cos(lat1) * Math.cos(lat2) *
+		Math.pow(Math.sin(((lon1 * rad) - (lon2 * rad)) / 2), 2)
+	))
+	let latitude = 0, longitude = 0, timestamp = 0
+	const speed = document.body.appendChild(Object.assign(document.createElement('div'), {
+		id: 'speed'
+	}))
+
+	const commands = {
+		'que hora es': t => speechSynthesis.speak(new SpeechSynthesisUtterance(new Date().toLocaleString('en', {hour: 'numeric', minute: 'numeric', hour12: true})))
+	}
+	if ()
+	SpeechRecognition = window.speechRecognition || window.SpeechRecognition || window.webkitSpeechRecognition
+	document.body.appendChild(Object.assign(document.createElement('button'), {
+		innerHTML: 'Start',
+		onclick() {
+			speechSynthesis.speak(new SpeechSynthesisUtterance('Iniciando sistemas'))
+
+			Object.assign(new SpeechRecognition, {
+				continuous: true,
+				lang: 'es-ES',
+				onresult: e => commands[e.results[e.results.length - 1][0].transcript.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().trim()]?.() || (speed.innerHTML = (e.results[e.results.length - 1][0].transcript)),
+				onend() {
+					this.start()
+				}
+			}).start()
+
+			<!-- navigator.geolocation.watchPosition(e => { -->
+				<!-- const time = Math.abs(timestamp - (timestamp = e.timestamp)) / 1e3 -->
+				<!-- const distance = harvesine(latitude, longitude, latitude = e.coords.latitude, longitude = e.coords.longitude) -->
+				<!-- speed.innerHTML = ((distance / time) * 3.6).toFixed(2) -->
+			<!-- }, undefined, { -->
+				<!-- enableHighAccuracy: true, -->
+				<!-- timeout: 1000 -->
+			<!-- }) -->
+
+			this.remove()
+		}
+	}))
+</script>
+</body>
