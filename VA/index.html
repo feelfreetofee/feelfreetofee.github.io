@@ -99,7 +99,7 @@
 			longitude = 0
 			this.watch = navigator.geolocation.watchPosition(e => {
 				const speed = Math.hav(latitude, longitude, latitude = e.coords.latitude, longitude = e.coords.longitude)
-					/ Math.abs(timestamp - (timestamp = e.timestamp)) / this.#units[this.#unit]
+					/ Math.abs(timestamp - (timestamp = e.timestamp)) * this.#units[this.#unit]
 				this.#shadow.innerHTML = `${speed.toFixed(2)} ${this.#unit}`
 			}, undefined, {
 				enableHighAccuracy: true,
