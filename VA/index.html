@@ -117,7 +117,10 @@
 					Math.hav(this.latitude, this.longitude, this.latitude = e.coords.latitude, this.longitude = e.coords.longitude)
 					/ Math.abs(this.timestamp - (this.timestamp = e.timestamp)) / 1e3 * this.#units[this.#unit]
 				).toFixed(2) + ' ' + this.#unit
-			)
+			, undefined, {
+				enableHighAccuracy: true,
+				timeout: 1000
+			})
 		}
 
 		disconnectedCallback() {
