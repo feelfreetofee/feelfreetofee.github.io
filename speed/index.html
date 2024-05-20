@@ -114,11 +114,14 @@
 		longitude = 0
 
 		connectedCallback() {
-			this.watch = navigator.geolocation.watchPosition(e =>
+			/* this.watch = navigator.geolocation.watchPosition(e =>
 				this.#shadow.innerHTML = (
 					Math.hav(this.latitude, this.longitude, this.latitude = e.coords.latitude, this.longitude = e.coords.longitude)
 					/ Math.abs(this.timestamp - (this.timestamp = e.timestamp)) / 1e3 * this.#units[this.#unit]
 				).toFixed(2) + ' ' + this.#unit
+			) */
+			this.watch = navigator.geolocation.watchPosition(e =>
+				this.#shadow.innerHTML = `${e.coords.latitude} ${e.coords.longitude}`
 			)
 		}
 
