@@ -95,8 +95,8 @@
 		#unit = 'm/s'
 		
 		#units = {
-			'm/s': 1e3,
-			'km/h': 6e4
+			'm/s': 1,
+			'km/h': 3.6
 		}
 
 		set unit(val) {
@@ -112,7 +112,7 @@
 			longitude = 0
 			this.watch = navigator.geolocation.watchPosition(e => {
 				const speed = Math.hav(latitude, longitude, latitude = e.coords.latitude, longitude = e.coords.longitude)
-					/ Math.abs(timestamp - (timestamp = e.timestamp)) * this.#units[this.#unit]
+					/ Math.abs(timestamp - (timestamp = e.timestamp)) * 1e3 * this.#units[this.#unit]
 				this.#shadow.innerHTML = `${speed.toFixed(2)} ${this.#unit}`
 			}, undefined, {
 				enableHighAccuracy: true,
