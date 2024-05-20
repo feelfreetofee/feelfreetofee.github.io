@@ -120,8 +120,9 @@
 					/ Math.abs(this.timestamp - (this.timestamp = e.timestamp)) / 1e3 * this.#units[this.#unit]
 				).toFixed(2) + ' ' + this.#unit
 			) */
+			const shadow = this.#shadow
 			function test(a, b, c, d) {
-				this.#shadow.innerHTML = `${a == b} ${c == d}`
+				shadow.innerHTML = `${a == b} ${c == d}`
 			}
 			this.watch = navigator.geolocation.watchPosition(e =>
 				test(this.latitude, this.longitude, this.latitude = e.coords.latitude, this.longitude = e.coords.longitude)
