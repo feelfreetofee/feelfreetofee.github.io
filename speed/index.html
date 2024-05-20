@@ -117,7 +117,8 @@
 					/ Math.abs(this.timestamp - (this.timestamp = e.timestamp)) / 1e3 * this.#units[this.#unit]
 				).toFixed(2) + ' ' + this.#unit
 			, undefined, {
-				enableHighAccuracy: true
+				enableHighAccuracy: true,
+				timeout: 1e3
 			})
 		}
 
