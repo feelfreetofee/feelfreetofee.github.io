@@ -1,15 +1,11 @@
 body {
-	margin: 0;
-}
-
-#temp {
-	background: #333333;
-	color: #fff;
-	font-family: monospace;
-    font-size: xxx-large;
-    font-weight: 900;
-	justify-content: center;
-	align-items: center;
-	display: flex;
-	height: 100%;
+	> main {
+		> a {
+			color: white;
+			text-decoration: auto;
+			&:hover {
+				text-decoration: underline;
+			}
+		}
+	}
 }

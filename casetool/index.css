@@ -1,0 +1,16 @@
+body {
+	> main {
+		grid-template-rows: 1fr auto;
+		display: grid;
+        max-height: 5e2px;
+		height: 100%;
+		width: 100%;
+		> div {
+			display: flex;
+			> textarea, > select {
+				width: 100%;
+				resize: none;
+			}
+		}
+	}
+}
