@@ -20,12 +20,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Bun
-        uses: oven-sh/setup-bun@v2
       - name: Setup Pages
         uses: actions/configure-pages@v5
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
       - name: Build with Bun
-        run: bun build --outdir=_site $(find . -maxdepth 2 -path "*/index.html")
+        run: bun build --outdir=_site $(find -path '*.html')
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
       - name: Deploy to GitHub Pages
