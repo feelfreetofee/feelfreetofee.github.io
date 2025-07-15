@@ -1,0 +1,39 @@
+body {
+    font-family: monospace;
+    font-size: 2em;
+    justify-self: center;
+    align-content: center;
+    background-color: #1c1c1c;
+    color: white;
+}
+
+div {
+    color: #FFF;
+    background-color: #F00;
+    padding: 1em 2em;
+    text-transform: uppercase;
+    font-weight: 900;
+}
+
+input, button {
+    background: none;
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    border-style: solid;
+    border-color: transparent;
+}
+
+input:focus, button:focus, button:hover {
+    outline: none;
+    border-color: #FFF;
+}
+
+button {
+    border-left-color: white;
+}
+
+button:active {
+    background-color: white;
+    color: #1c1c1c;
+}
