@@ -1,5 +1,3 @@
-import './camera'
-
 import {client} from './client'
 
 import {tts, TTS} from './tts'
