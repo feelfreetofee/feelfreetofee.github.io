@@ -8,8 +8,8 @@ const languageDetector = await LanguageDetector.create({
 
 function detectLanguage(text) {
     return languageDetector.detect(text)
-        .then(r => r.find(({detectedLanguage}) =>
-            languageDetector.expectedInputLanguages.includes(detectedLanguage)))
+        .then(r => r.find(element =>
+            languageDetector.expectedInputLanguages.includes(element?.detectedLanguage)))
 }
 
 client.addEventListener('notification', ({data}) => {
