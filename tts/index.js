@@ -8,14 +8,14 @@ const languageDetector = await LanguageDetector.create({
 
 function detectLanguage(text) {
     return languageDetector.detect(text)
-        .then(r => r.find(element =>
-            languageDetector.expectedInputLanguages.includes(element?.detectedLanguage)))
+        .then(r => r.find(({detectedLanguage}) =>
+            languageDetector.expectedInputLanguages.includes(detectedLanguage)))
 }
 
 client.addEventListener('notification', ({data}) => {
     if (data.metadata.subscription_type !== 'channel.chat.message') return
     const {text} = data.payload.event.message
-    detectLanguage(text).then(({detectedLanguage}) => TTS(text, detectedLanguage))
+    detectLanguage(text).then(r => TTS(text, r?.detectedLanguage))
 })
 
 import * as OAuth2 from './twitch/oauth2'
