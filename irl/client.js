@@ -2,7 +2,7 @@ import {Twitch} from './twitch'
 
 export const client = new Twitch({
     client_id: '73vgkrms3plerfqgtxpzketgh2abgr',
-    token: localStorage.getItem('twitch_token'),
+    token: localStorage.getItem('irl_twitch_token'),
     scopes: ['user:read:chat']
 })
 
