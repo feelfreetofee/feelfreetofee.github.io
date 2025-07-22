@@ -25,7 +25,7 @@ import * as OAuth2 from './twitch/oauth2'
 if (!client.token)
     try {
         if (client.token = OAuth2.response())
-            localStorage.setItem('twitch_token', client.token)
+            localStorage.setItem('irl_twitch_token', client.token)
         else
             location.replace(
                 OAuth2.authorize(
