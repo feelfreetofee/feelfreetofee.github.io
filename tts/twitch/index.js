@@ -40,8 +40,10 @@ export class Twitch extends EventTarget {
                 'Client-Id': this.client_id
             },
             body: JSON.stringify({
-                message: message
+                message: message,
+                sender_id: this.user_id
             })
         })
     }
 }
+
