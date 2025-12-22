@@ -64,7 +64,12 @@ function processMessageText(text) {
     
     const playMatch = text.match(/^!play\s+(.+)$/i)
     if (playMatch) {
-        const url = playMatch[1].trim()
+        let url = playMatch[1].trim()
+        
+        if (url.startsWith('/media/sounds/')) {
+            url = 'https://www.myinstants.com' + url
+        }
+        
         if (url.includes('www.myinstants.com') || url.includes('myinstants.com')) {
             try {
                 const audio = new Audio(url)
