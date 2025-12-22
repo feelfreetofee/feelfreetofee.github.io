@@ -5,8 +5,12 @@ const languageDetector = await LanguageDetector.create({
     expectedInputLanguages: ['en-US', 'es-ES'],
 })
 
-const pedroAudio = new Audio('https://www.myinstants.com/media/sounds/pedro-song.mp3')
-pedroAudio.volume = 0.8
+const songs = {
+    pedro: new Audio('https://www.myinstants.com/media/sounds/pedro-song.mp3'),
+    trololo: new Audio('https://www.myinstants.com/media/sounds/trollolol.swf.mp3')
+}
+
+let songTimeout
 
 function detectLanguage(text) {
     return languageDetector.detect(text)
@@ -14,22 +18,28 @@ function detectLanguage(text) {
             languageDetector.expectedInputLanguages.includes(detectedLanguage)))
 }
 
-function playPedroSong() {
-    pedroAudio.currentTime = 0
-    pedroAudio.play()
+function playSong(audio, duration = 15000) {
+    if (songTimeout) return
+
+    audio.volume = 0.4
+    audio.currentTime = 0
+    audio.play()
     
-    setTimeout(() => {
-        pedroAudio.pause()
-        pedroAudio.currentTime = 0
-    }, 15000)
+    songTimeout = setTimeout(() => {
+        audio.pause()
+        songTimeout = undefined
+    }, duration)
 }
 
 function processMessageText(text) {
-    if (/pedro/i.test(text)) {
-        playPedroSong()
-        return null
-    }
-    
+    const lowerText = text.toLowerCase()
+
+    for (const song in songs)
+        if (lowerText === song) {
+            playSong(songs[song])
+            return null
+        }
+
     const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)|([a-zA-Z0-9-]+\.(com|net|org|io|tv|gg|xyz|me|co)[^\s]*)/gi
     return text.replace(urlRegex, 'LINK')
 }
@@ -40,9 +50,8 @@ client.addEventListener('notification', ({data}) => {
     
     const processedText = processMessageText(text)
     
-    if (processedText) {
+    if (processedText)
         detectLanguage(processedText).then(r => TTS(processedText, r?.detectedLanguage))
-    }
 })
 
 import * as OAuth2 from './twitch/oauth2'
@@ -74,3 +83,4 @@ if (client.token)
             client.scopes
         )
     ))
+
