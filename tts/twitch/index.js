@@ -31,4 +31,17 @@ export class Twitch extends EventTarget {
             body: JSON.stringify(data)
         })
     }
+    async sendMessage(broadcaster_user_id, message) {
+        return fetch(`https://api.twitch.tv/helix/chat/messages?broadcaster_id=${broadcaster_user_id}&moderator_id=${this.user_id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: this.token,
+                'Client-Id': this.client_id
+            },
+            body: JSON.stringify({
+                message: message
+            })
+        })
+    }
 }
