@@ -17,6 +17,7 @@ function detectLanguage(text) {
         .then(r => r.find(({detectedLanguage}) =>
             languageDetector.expectedInputLanguages.includes(detectedLanguage)))
 }
+
 function playSong(audio, duration = 15000) {
     if (activeSongs.has(audio)) return
     
@@ -115,7 +116,9 @@ client.addEventListener('notification', ({data}) => {
     if (processedText)
         detectLanguage(processedText).then(r => TTS(processedText, r?.detectedLanguage))
 })
+
 import * as OAuth2 from './twitch/oauth2'
+
 if (!client.token)
     try {
         if (client.token = OAuth2.response())
@@ -135,12 +138,15 @@ if (!client.token)
 if (client.token)
     OAuth2.validate(client)
     .then(validation => client.connect(client.user_id = validation.user_id))
-    .catch(e => location.replace(
-        OAuth2.authorize(
-            location.href,
-            client.client_id,
-            client.scopes
+    .catch(e => {
+        localStorage.removeItem('tts_twitch_token')
+        location.replace(
+            OAuth2.authorize(
+                location.href,
+                client.client_id,
+                client.scopes
+            )
         )
-    ))
+})
 
 
