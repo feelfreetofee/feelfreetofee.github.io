@@ -7,7 +7,8 @@ const languageDetector = await LanguageDetector.create({
 
 const songs = {
     pedro: new Audio('https://www.myinstants.com/media/sounds/pedro-song.mp3'),
-    trololo: new Audio('https://www.myinstants.com/media/sounds/trollolol.swf.mp3')
+    trololo: new Audio('https://www.myinstants.com/media/sounds/trollolol.swf.mp3'),
+    pito: new Audio('https://www.myinstants.com/media/sounds/ay-ay-necesito-pito.mp3')
 }
 
 let songTimeout
@@ -83,4 +84,5 @@ if (client.token)
             client.scopes
         )
     ))
+
 
