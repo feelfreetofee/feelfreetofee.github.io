@@ -10,7 +10,12 @@ const songs = {
     yeet: new Audio('https://www.myinstants.com/media/sounds/yeet-sound-effect.mp3'),
 }
 const activeSongs = new Map()
-let currentVolume = parseFloat(localStorage.getItem('tts_volume')) ?? 0.4
+
+let currentVolume = (() => {
+    const stored = localStorage.getItem('tts_volume')
+    const parsed = parseFloat(stored)
+    return isNaN(parsed) || !isFinite(parsed) ? 0.4 : parsed
+})()
 
 async function askGemini(question) {
     const apiKey = localStorage.getItem('gemini_api_key')
@@ -82,13 +87,16 @@ function stopAllAudio() {
 }
 
 function setVolume(volume) {
-    const vol = Math.max(0, Math.min(100, volume)) / 100
+    const numVolume = parseFloat(volume)
+    if (isNaN(numVolume) || !isFinite(numVolume)) return
+    const vol = Math.max(0, Math.min(100, numVolume)) / 100
     currentVolume = vol
     activeSongs.forEach((timeout, audio) => {
         audio.volume = vol
     })
     localStorage.setItem('tts_volume', currentVolume.toString())
 }
+
 function processMessageText(text) {
     const lowerText = text.toLowerCase().trim()
     
@@ -227,6 +235,7 @@ if (client.token)
             client.scopes
         )
     ))
+
 
 
 
