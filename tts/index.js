@@ -8,25 +8,41 @@ const languageDetector = await LanguageDetector.create({
 const pedroAudio = new Audio('https://www.myinstants.com/media/sounds/pedro-song.mp3')
 pedroAudio.volume = 0.8
 
+const trololoAudio = new Audio('https://www.myinstants.com/media/sounds/trollolol.swf.mp3')
+trololoAudio.volume = 0.8
+
+let isPlayingSong = false
+
 function detectLanguage(text) {
     return languageDetector.detect(text)
         .then(r => r.find(({detectedLanguage}) =>
             languageDetector.expectedInputLanguages.includes(detectedLanguage)))
 }
 
-function playPedroSong() {
-    pedroAudio.currentTime = 0
-    pedroAudio.play()
+function playSong(audio, duration = 15000) {
+    if (isPlayingSong) return
+    
+    isPlayingSong = true
+    audio.currentTime = 0
+    audio.play()
     
     setTimeout(() => {
-        pedroAudio.pause()
-        pedroAudio.currentTime = 0
-    }, 15000)
+        audio.pause()
+        audio.currentTime = 0
+        isPlayingSong = false
+    }, duration)
 }
 
 function processMessageText(text) {
-    if (/pedro/i.test(text)) {
-        playPedroSong()
+    const lowerText = text.toLowerCase()
+    
+    if (lowerText.includes('pedro')) {
+        playSong(pedroAudio)
+        return null
+    }
+    
+    if (lowerText.includes('trololo')) {
+        playSong(trololoAudio)
         return null
     }
     
