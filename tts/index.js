@@ -95,6 +95,10 @@ function processMessageText(text) {
 client.addEventListener('notification', ({data}) => {
     if (data.metadata.subscription_type !== 'channel.chat.message') return
     const {text} = data.payload.event.message
+    const chatter_user_id = data.payload.event.chatter_user_id
+
+    if (chatter_user_id === client.user_id) return
+    
     const lowerText = text.toLowerCase().trim()
     
     if (lowerText === '!hola') {
@@ -138,4 +142,5 @@ if (client.token)
             client.scopes
         )
     ))
+
 
