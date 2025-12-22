@@ -5,13 +5,12 @@ const languageDetector = await LanguageDetector.create({
     expectedInputLanguages: ['en-US', 'es-ES'],
 })
 
-const pedroAudio = new Audio('https://www.myinstants.com/media/sounds/pedro-song.mp3')
-pedroAudio.volume = 0.8
+const songs = {
+    pedro: new Audio('https://www.myinstants.com/media/sounds/pedro-song.mp3'),
+    trololo: new Audio('https://www.myinstants.com/media/sounds/trollolol.swf.mp3')
+}
 
-const trololoAudio = new Audio('https://www.myinstants.com/media/sounds/trollolol.swf.mp3')
-trololoAudio.volume = 0.8
-
-let isPlayingSong = false
+let songTimeout
 
 function detectLanguage(text) {
     return languageDetector.detect(text)
@@ -20,32 +19,27 @@ function detectLanguage(text) {
 }
 
 function playSong(audio, duration = 15000) {
-    if (isPlayingSong) return
-    
-    isPlayingSong = true
+    if (songTimeout) return
+
+    audio.volume = 0.4
     audio.currentTime = 0
     audio.play()
     
-    setTimeout(() => {
+    songTimeout = setTimeout(() => {
         audio.pause()
-        audio.currentTime = 0
-        isPlayingSong = false
+        songTimeout = undefined
     }, duration)
 }
 
 function processMessageText(text) {
     const lowerText = text.toLowerCase()
-    
-    if (lowerText.includes('pedro')) {
-        playSong(pedroAudio)
-        return null
-    }
-    
-    if (lowerText.includes('trololo')) {
-        playSong(trololoAudio)
-        return null
-    }
-    
+
+    for (const song in songs)
+        if (lowerText === song) {
+            playSong(songs[song])
+            return null
+        }
+
     const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)|([a-zA-Z0-9-]+\.(com|net|org|io|tv|gg|xyz|me|co)[^\s]*)/gi
     return text.replace(urlRegex, 'LINK')
 }
@@ -56,9 +50,8 @@ client.addEventListener('notification', ({data}) => {
     
     const processedText = processMessageText(text)
     
-    if (processedText) {
+    if (processedText)
         detectLanguage(processedText).then(r => TTS(processedText, r?.detectedLanguage))
-    }
 })
 
 import * as OAuth2 from './twitch/oauth2'
@@ -90,3 +83,4 @@ if (client.token)
             client.scopes
         )
     ))
+
