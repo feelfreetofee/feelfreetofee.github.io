@@ -10,6 +10,8 @@ const songs = {
     yeet: new Audio('https://www.myinstants.com/media/sounds/yeet-sound-effect.mp3'),
 }
 const activeSongs = new Map()
+let currentVolume = parseFloat(localStorage.getItem('tts_volume')) || 0.4
+let currentTTS = null
 
 function detectLanguage(text) {
     return languageDetector.detect(text)
@@ -19,7 +21,7 @@ function detectLanguage(text) {
 function playSong(audio, duration = 15000) {
     if (activeSongs.has(audio)) return
     
-    audio.volume = 0.4
+    audio.volume = currentVolume
     audio.currentTime = 0
     audio.play()
     
@@ -30,8 +32,41 @@ function playSong(audio, duration = 15000) {
     
     activeSongs.set(audio, timeout)
 }
+
+function stopAllAudio() {
+    activeSongs.forEach((timeout, audio) => {
+        clearTimeout(timeout)
+        audio.pause()
+        activeSongs.delete(audio)
+    })
+    if (currentTTS) {
+        currentTTS.stop?.()
+        currentTTS = null
+    }
+}
+
+function setVolume(volume) {
+    const vol = Math.max(0, Math.min(100, volume)) / 100
+    currentVolume = vol
+    activeSongs.forEach((timeout, audio) => {
+        audio.volume = vol
+    })
+    localStorage.setItem('tts_volume', currentVolume.toString())
+}
 function processMessageText(text) {
-    const lowerText = text.toLowerCase()
+    const lowerText = text.toLowerCase().trim()
+    
+    if (lowerText === '!skip') {
+        stopAllAudio()
+        return null
+    }
+    
+    const volumeMatch = lowerText.match(/^!volume\s+(\d+)$/)
+    if (volumeMatch) {
+        setVolume(parseInt(volumeMatch[1]))
+        return null
+    }
+    
     for (const song in songs)
         if (lowerText === song) {
             playSong(songs[song])
@@ -47,7 +82,9 @@ client.addEventListener('notification', ({data}) => {
     const processedText = processMessageText(text)
     
     if (processedText)
-        detectLanguage(processedText).then(r => TTS(processedText, r?.detectedLanguage))
+        detectLanguage(processedText).then(r => {
+            currentTTS = TTS(processedText, r?.detectedLanguage)
+        })
 })
 import * as OAuth2 from './twitch/oauth2'
 if (!client.token)
@@ -76,4 +113,3 @@ if (client.token)
             client.scopes
         )
     ))
-
