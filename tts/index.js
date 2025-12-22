@@ -1,5 +1,5 @@
-    import {client} from './client'
-import {tts, TTS} from './tts'
+import {client} from './client'
+import {tts, TTS, stopTTS} from './tts'
 const languageDetector = await LanguageDetector.create({
     expectedInputLanguages: ['en-US', 'es-ES'],
 })
@@ -94,6 +94,7 @@ function processMessageText(text) {
     
     if (lowerText === '!skip') {
         stopAllAudio()
+        stopTTS()
         return null
     }
     
@@ -145,6 +146,12 @@ client.addEventListener('notification', ({data}) => {
     if (chatter_user_id === client.user_id) return
     
     const lowerText = text.toLowerCase().trim()
+
+    if (lowerText === '!skip') {
+        stopAllAudio()
+        stopTTS()
+        return
+    }
     
     if (lowerText === '!hola') {
         const broadcaster_id = client.user_id
@@ -220,4 +227,5 @@ if (client.token)
             client.scopes
         )
     ))
+
 
