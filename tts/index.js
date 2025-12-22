@@ -95,6 +95,16 @@ function processMessageText(text) {
 client.addEventListener('notification', ({data}) => {
     if (data.metadata.subscription_type !== 'channel.chat.message') return
     const {text} = data.payload.event.message
+    const lowerText = text.toLowerCase().trim()
+    
+    if (lowerText === '!hola') {
+        const broadcaster_id = client.user_id
+        const username = data.payload.event.chatter_user_name || data.payload.event.chatter_user_login || 'amigo'
+        client.sendMessage(broadcaster_id, `¡Hola ${username}! 👋`).catch(err => {
+            console.error('Error al enviar mensaje:', err)
+        })
+        return
+    }
     
     const processedText = processMessageText(text)
     
@@ -128,3 +138,4 @@ if (client.token)
             client.scopes
         )
     ))
+
