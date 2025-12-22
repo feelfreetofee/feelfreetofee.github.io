@@ -3,7 +3,13 @@ export function tts(text, lang = 'en-US') {
         const utterance = new SpeechSynthesisUtterance(text)
         utterance.lang = lang
         utterance.addEventListener('end', resolve)
-        utterance.addEventListener('error', reject)
+        utterance.addEventListener('error', (event) => {
+            if (event.error === 'interrupted') {
+                resolve()
+            } else {
+                reject(event)
+            }
+        })
         speechSynthesis.speak(utterance)
     })
 }
@@ -18,7 +24,6 @@ export async function TTS(text, lang) {
         await tts(speakQueue.at(0), lang)
         speakQueue.shift()
     }
-
 }
 
 export function stopTTS() {
