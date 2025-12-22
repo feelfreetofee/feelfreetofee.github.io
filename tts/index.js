@@ -6,7 +6,8 @@ const languageDetector = await LanguageDetector.create({
 const songs = {
     pedro: new Audio('https://www.myinstants.com/media/sounds/pedro-song.mp3'),
     trololo: new Audio('https://www.myinstants.com/media/sounds/trollolol.swf.mp3'),
-    yeet: new Audio('https://www.myinstants.com/media/sounds/yeet-sound-effect.mp3')
+    pito: new Audio('https://www.myinstants.com/media/sounds/ay-ay-necesito-pito.mp3'),
+    yeet: new Audio('https://www.myinstants.com/media/sounds/yeet-sound-effect.mp3'),
 }
 const activeSongs = new Map()
 
@@ -75,3 +76,4 @@ if (client.token)
             client.scopes
         )
     ))
+
