@@ -12,12 +12,54 @@ const songs = {
 const activeSongs = new Map()
 let currentVolume = parseFloat(localStorage.getItem('tts_volume')) ?? 0.4
 
+async function askChatGPT(question) {
+    const apiKey = localStorage.getItem('openai_api_key')
+    if (!apiKey) {
+        return 'No hay API key configurada.'
+    }
+    
+    try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-3.5-turbo',
+                messages: [{
+                    role: 'user',
+                    content: question
+                }],
+                max_tokens: 150,
+                temperature: 0.7
+            })
+        })
+        
+        if (!response.ok) {
+            const error = await response.json()
+            return `Error: ${error.error?.message || 'Error al consultar ChatGPT'}`
+        }
+        
+        const data = await response.json()
+        const answer = data.choices?.[0]?.message?.content
+        
+        if (!answer) {
+            return 'Error: No se recibió respuesta de ChatGPT'
+        }
+        
+        return answer.length > 500 ? answer.substring(0, 497) + '...' : answer
+    } catch (error) {
+        console.error('Error al consultar ChatGPT:', error)
+        return `Error: ${error.message}`
+    }
+}
+
 function detectLanguage(text) {
     return languageDetector.detect(text)
         .then(r => r.find(({detectedLanguage}) =>
             languageDetector.expectedInputLanguages.includes(detectedLanguage)))
 }
-
 function playSong(audio, duration = 15000) {
     if (activeSongs.has(audio)) return
     
@@ -54,6 +96,10 @@ function processMessageText(text) {
     
     if (lowerText === '!skip') {
         stopAllAudio()
+        return null
+    }
+    
+    if (lowerText.startsWith('!pregunta ') || lowerText.startsWith('!openai-key ')) {
         return null
     }
     
@@ -97,7 +143,7 @@ client.addEventListener('notification', ({data}) => {
     if (data.metadata.subscription_type !== 'channel.chat.message') return
     const {text} = data.payload.event.message
     const chatter_user_id = data.payload.event.chatter_user_id
-
+    
     if (chatter_user_id === client.user_id) return
     
     const lowerText = text.toLowerCase().trim()
@@ -111,14 +157,45 @@ client.addEventListener('notification', ({data}) => {
         return
     }
     
+    const openaiKeyMatch = text.match(/^!openai-key\s+(.+)$/i)
+    if (openaiKeyMatch) {
+        const apiKey = openaiKeyMatch[1].trim()
+        localStorage.setItem('openai_api_key', apiKey)
+        const broadcaster_id = client.user_id
+        client.sendMessage(broadcaster_id, 'API key de OpenAI configurada correctamente').catch(err => {
+            console.error('Error al enviar mensaje:', err)
+        })
+        return
+    }
+    
+    const chatgptMatch = text.match(/^!pregunta\s+(.+)$/i)
+    if (chatgptMatch) {
+        const question = chatgptMatch[1].trim()
+        const broadcaster_id = client.user_id
+        const username = data.payload.event.chatter_user_name || data.payload.event.chatter_user_login || 'Usuario'
+        
+        client.sendMessage(broadcaster_id, `🤔 ${username}, déjame pensar...`).catch(err => {
+            console.error('Error al enviar mensaje:', err)
+        })
+        
+        askChatGPT(question).then(answer => {
+            client.sendMessage(broadcaster_id, `💬 ${username}: ${answer}`).catch(err => {
+                console.error('Error al enviar mensaje:', err)
+            })
+        }).catch(err => {
+            client.sendMessage(broadcaster_id, `Error: ${err.message}`).catch(sendErr => {
+                console.error('Error al enviar mensaje:', sendErr)
+            })
+        })
+        return
+    }
+    
     const processedText = processMessageText(text)
     
     if (processedText)
         detectLanguage(processedText).then(r => TTS(processedText, r?.detectedLanguage))
 })
-
 import * as OAuth2 from './twitch/oauth2'
-
 if (!client.token)
     try {
         if (client.token = OAuth2.response())
@@ -132,21 +209,15 @@ if (!client.token)
                 )
             )
     } catch(error) {
-        // TODO UI
         console.error(`${error.name} - ${error.message}`)
     }
 if (client.token)
     OAuth2.validate(client)
     .then(validation => client.connect(client.user_id = validation.user_id))
-    .catch(e => {
-        localStorage.removeItem('tts_twitch_token')
-        location.replace(
-            OAuth2.authorize(
-                location.href,
-                client.client_id,
-                client.scopes
-            )
+    .catch(e => location.replace(
+        OAuth2.authorize(
+            location.href,
+            client.client_id,
+            client.scopes
         )
-})
-
-
+    ))
