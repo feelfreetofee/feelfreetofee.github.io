@@ -18,4 +18,10 @@ export async function TTS(text, lang) {
         await tts(speakQueue.at(0), lang)
         speakQueue.shift()
     }
+
+}
+
+export function stopTTS() {
+    speechSynthesis.cancel()
+    speakQueue.length = 0
 }
