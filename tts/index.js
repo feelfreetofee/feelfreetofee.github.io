@@ -1,4 +1,4 @@
-import {client} from './client'
+    import {client} from './client'
 import {tts, TTS} from './tts'
 const languageDetector = await LanguageDetector.create({
     expectedInputLanguages: ['en-US', 'es-ES'],
@@ -180,6 +180,7 @@ client.addEventListener('notification', ({data}) => {
             client.sendMessage(broadcaster_id, `💬 ${username}: ${answer}`).catch(err => {
                 console.error('Error al enviar mensaje:', err)
             })
+            detectLanguage(answer).then(r => TTS(answer, r?.detectedLanguage))
         }).catch(err => {
             client.sendMessage(broadcaster_id, `Error: ${err.message}`).catch(sendErr => {
                 console.error('Error al enviar mensaje:', sendErr)
@@ -219,3 +220,4 @@ if (client.token)
             client.scopes
         )
     ))
+
