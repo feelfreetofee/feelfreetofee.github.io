@@ -10,8 +10,7 @@ const songs = {
     yeet: new Audio('https://www.myinstants.com/media/sounds/yeet-sound-effect.mp3'),
 }
 const activeSongs = new Map()
-let currentVolume = parseFloat(localStorage.getItem('tts_volume')) || 0.4
-let currentTTS = null
+let currentVolume = parseFloat(localStorage.getItem('tts_volume')) ?? 0.4
 
 function detectLanguage(text) {
     return languageDetector.detect(text)
@@ -39,10 +38,6 @@ function stopAllAudio() {
         audio.pause()
         activeSongs.delete(audio)
     })
-    if (currentTTS) {
-        currentTTS.stop?.()
-        currentTTS = null
-    }
 }
 
 function setVolume(volume) {
@@ -82,9 +77,7 @@ client.addEventListener('notification', ({data}) => {
     const processedText = processMessageText(text)
     
     if (processedText)
-        detectLanguage(processedText).then(r => {
-            currentTTS = TTS(processedText, r?.detectedLanguage)
-        })
+        detectLanguage(processedText).then(r => TTS(processedText, r?.detectedLanguage))
 })
 import * as OAuth2 from './twitch/oauth2'
 if (!client.token)
@@ -113,3 +106,4 @@ if (client.token)
             client.scopes
         )
     ))
+
