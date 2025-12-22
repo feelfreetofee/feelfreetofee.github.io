@@ -12,45 +12,42 @@ const songs = {
 const activeSongs = new Map()
 let currentVolume = parseFloat(localStorage.getItem('tts_volume')) ?? 0.4
 
-async function askChatGPT(question) {
-    const apiKey = localStorage.getItem('openai_api_key')
+async function askGemini(question) {
+    const apiKey = localStorage.getItem('gemini_api_key')
     if (!apiKey) {
         return 'No hay API key configurada.'
     }
     
     try {
-        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: 'gpt-3.5-turbo',
-                messages: [{
-                    role: 'user',
-                    content: question
-                }],
-                max_tokens: 150,
-                temperature: 0.7
+                contents: [{
+                    parts: [{
+                        text: question
+                    }]
+                }]
             })
         })
         
         if (!response.ok) {
             const error = await response.json()
-            return `Error: ${error.error?.message || 'Error al consultar ChatGPT'}`
+            return `Error: ${error.error?.message || 'Error al consultar Gemini'}`
         }
         
         const data = await response.json()
-        const answer = data.choices?.[0]?.message?.content
+        const answer = data.candidates?.[0]?.content?.parts?.[0]?.text
         
         if (!answer) {
-            return 'Error: No se recibió respuesta de ChatGPT'
+            return 'Error: No se recibió respuesta de Gemini'
         }
         
         return answer.length > 500 ? answer.substring(0, 497) + '...' : answer
     } catch (error) {
-        console.error('Error al consultar ChatGPT:', error)
+        console.error('Error al consultar Gemini:', error)
         return `Error: ${error.message}`
     }
 }
@@ -99,7 +96,7 @@ function processMessageText(text) {
         return null
     }
     
-    if (lowerText.startsWith('!pregunta ') || lowerText.startsWith('!openai-key ')) {
+    if (lowerText.startsWith('!pregunta ') || lowerText.startsWith('!gemini-key ')) {
         return null
     }
     
@@ -157,20 +154,20 @@ client.addEventListener('notification', ({data}) => {
         return
     }
     
-    const openaiKeyMatch = text.match(/^!openai-key\s+(.+)$/i)
-    if (openaiKeyMatch) {
-        const apiKey = openaiKeyMatch[1].trim()
-        localStorage.setItem('openai_api_key', apiKey)
+    const geminiKeyMatch = text.match(/^!gemini-key\s+(.+)$/i)
+    if (geminiKeyMatch) {
+        const apiKey = geminiKeyMatch[1].trim()
+        localStorage.setItem('gemini_api_key', apiKey)
         const broadcaster_id = client.user_id
-        client.sendMessage(broadcaster_id, 'API key de OpenAI configurada correctamente').catch(err => {
+        client.sendMessage(broadcaster_id, 'API key de Gemini configurada correctamente').catch(err => {
             console.error('Error al enviar mensaje:', err)
         })
         return
     }
     
-    const chatgptMatch = text.match(/^!pregunta\s+(.+)$/i)
-    if (chatgptMatch) {
-        const question = chatgptMatch[1].trim()
+    const geminiMatch = text.match(/^!pregunta\s+(.+)$/i)
+    if (geminiMatch) {
+        const question = geminiMatch[1].trim()
         const broadcaster_id = client.user_id
         const username = data.payload.event.chatter_user_name || data.payload.event.chatter_user_login || 'Usuario'
         
@@ -178,7 +175,7 @@ client.addEventListener('notification', ({data}) => {
             console.error('Error al enviar mensaje:', err)
         })
         
-        askChatGPT(question).then(answer => {
+        askGemini(question).then(answer => {
             client.sendMessage(broadcaster_id, `💬 ${username}: ${answer}`).catch(err => {
                 console.error('Error al enviar mensaje:', err)
             })
