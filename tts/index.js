@@ -62,6 +62,23 @@ function processMessageText(text) {
         return null
     }
     
+    const playMatch = text.match(/^!play\s+(.+)$/i)
+    if (playMatch) {
+        const url = playMatch[1].trim()
+        if (url.includes('www.myinstants.com') || url.includes('myinstants.com')) {
+            try {
+                const audio = new Audio(url)
+                audio.addEventListener('error', () => {
+                    console.error('Error al cargar audio desde URL:', url)
+                })
+                playSong(audio)
+            } catch(error) {
+                console.error('Error al crear audio desde URL:', error)
+            }
+        }
+        return null
+    }
+    
     for (const song in songs)
         if (lowerText === song) {
             playSong(songs[song])
@@ -106,4 +123,3 @@ if (client.token)
             client.scopes
         )
     ))
-
