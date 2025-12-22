@@ -3,7 +3,7 @@ import {Twitch} from './twitch'
 export const client = new Twitch({
     client_id: 'zqkahqvy718q2gg8gmq2853umi0snj',
     token: localStorage.getItem('tts_twitch_token'),
-    scopes: ['user:read:chat']
+    scopes: ['user:read:chat', 'chat:edit']
 })
 
 client.addEventListener('session_welcome', function({data}) {
@@ -20,3 +20,4 @@ client.addEventListener('session_welcome', function({data}) {
         }
     })
 })
+
