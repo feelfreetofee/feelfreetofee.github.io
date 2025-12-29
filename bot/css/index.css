@@ -1,0 +1,19 @@
+@import 'authorize/index.css';
+
+body {
+    margin: 0;
+
+    font-family: sans-serif;
+
+    color: #fff;
+
+    dialog {
+        border: none;
+        border-radius: 1em;
+
+        outline-color: transparent;
+
+        color: inherit;
+        background-color: #272727;
+    }
+}

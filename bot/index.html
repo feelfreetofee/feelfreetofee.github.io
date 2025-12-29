@@ -1,0 +1,19 @@
+<link rel=stylesheet href=css/index.css>
+<script type=module src=js/index.js defer></script>
+<template id=authorize>
+    <div class=authorize>
+        <div class=error></div>
+        <a class=twitch>Connect with Twitch</a>
+        <dialog class=token>
+            <form>
+                <div class=title>Check your browser!</div>
+                <div class=description>Connect your Twitch account in your browser and paste the token here.</div>
+                <div class=error></div>
+                <div>
+                    <input type=password placeholder='Paste your token here'>
+                    <input type=submit value=Connect>
+                </div>
+            </form>
+        </dialog>
+    </div>
+</template>

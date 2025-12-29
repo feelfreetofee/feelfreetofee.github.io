@@ -1,0 +1,36 @@
+@import 'alternative.css';
+
+
+body > div.authorize {
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    &:has(> div.error:not(:empty)) {
+        gap: 1em;
+    }
+
+    > div.error:not(:empty) {
+        padding: .75em 1.25em;
+
+        border-radius: 1em;
+
+        color: white;
+        background-color: #e45d4d;
+    }
+
+    > a.twitch {
+        padding: 1em 1.25em;
+
+        border-radius: 2em;
+
+        text-decoration: none;
+        font-weight: 600;
+
+        color: white;
+        background-color: #6441a5;
+    }
+}
