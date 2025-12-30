@@ -22,6 +22,8 @@ export default function({
 }) {
     if (broadcaster_user_id === chatter_user_id) return
     const text = sanitizeMessage(fragments)
+    if (text.includes('streamboo')) return
     if (text) languageDetector(text)
     .then(r => tts(text, r?.detectedLanguage))
+
 }
