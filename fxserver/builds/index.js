@@ -28,7 +28,7 @@ const buildElementTemplate = document.head.querySelector('template#build')
  */
 function createBuildElement({version, date}) {
     const element = buildElementTemplate.content.cloneNode(true)
-    element.querySelector('a').href = `${endpoint}/build/win32/${version}/download`
+    element.querySelector('a').href = `${endpoint}/build/${platform.value}/${version}/download`
     element.querySelector('a > div').id = version
     element.querySelector('a > div > span.version').innerText = version
     element.querySelector('a > div > span.date').innerText = new Date(date * 1e3).toLocaleString()
@@ -81,7 +81,11 @@ const observer = new IntersectionObserver(([{isIntersecting}], observer) => {
 })
 
 platform.addEventListener('change', () => {
-    observer.disconnect()
+    const url = new URL(window.location)
+
+    url.searchParams.set('platform', platform.value)
+
+    window.history.replaceState(undefined, undefined, url)
 
     main.replaceChildren()
 

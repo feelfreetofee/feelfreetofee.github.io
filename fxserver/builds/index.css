@@ -37,7 +37,7 @@ body {
                 display: flex;
                 justify-content: space-between;
                 gap: 1em;
-                &:hover, &:focus {
+                &:hover, &:target {
                     background-color: var(--color-b);
                 }
                 &:active {
