@@ -1,0 +1,56 @@
+:root {
+    --color-a: #00000013;
+    --color-b: #0000000d;
+    --color-c: #00000006;
+}
+
+body {
+    font-family: system-ui;
+    > header {
+        background-color: var(--color-a);
+        > span {
+            &:first-child {
+                font-weight: 600;
+            }
+        }
+    }
+    > header,
+    > main > a > div {
+        padding: .5em .75em;
+    }
+    > main > a > div {
+        border: solid var(--color-a);
+        border-width: 0em .0625em .0625em;
+    }
+    select {
+        background-color: transparent;
+    }
+    select, button {
+        padding: inherit;
+        border: none;
+    }
+    > main {
+        > a {
+            text-decoration: none;
+            color: inherit;
+            > div {
+                display: flex;
+                justify-content: space-between;
+                gap: 1em;
+                &:hover, &:focus {
+                    background-color: var(--color-b);
+                }
+                &:active {
+                    background-color: var(--color-c);
+                }
+                > span {
+                    &.date {
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
+                }
+            }
+        }
+    }
+}
